@@ -112,6 +112,20 @@ public class BCUIManager : UIManagerBase
                 }
             }
                 break;
+            case PanelType.OrbFamStats:
+            {
+                var panel = GetPanel<OrbFamPanel>();
+                if (panel == null)
+                {
+                    var item = new OrbFamPanel(UiBase);
+                    UIPanels.Add(item);
+                }
+                else
+                {
+                    panel.SetActive(!panel.Enabled);
+                }
+            }
+                break;
             case PanelType.TestPanel:
             {
                 var panel = GetPanel<TestPanel>();

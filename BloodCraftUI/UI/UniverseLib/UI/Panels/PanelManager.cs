@@ -26,7 +26,7 @@ public class PanelManager
         resizeCursorUIBase != null &&
         resizeCursorUIBase.Enabled;
 
-    protected internal static readonly List<PanelDragger> allDraggers = new();
+    protected internal static readonly List<IDragger> allDraggers = new();
 
     protected internal static UIBase? resizeCursorUIBase;
     protected internal static GameObject? resizeCursor;
@@ -46,7 +46,7 @@ public class PanelManager
         wasAnyDragging = false;
         Resizing = false;
 
-        foreach (PanelDragger instance in allDraggers)
+        foreach (IDragger instance in allDraggers)
         {
             instance.WasDragging = false;
             instance.WasResizing = false;
@@ -96,7 +96,7 @@ public class PanelManager
 
     protected readonly List<IPanelBase> panelInstances = new();
     protected readonly Dictionary<int, IPanelBase> transformIDToUIPanel = new();
-    protected readonly List<PanelDragger> draggerInstances = new();
+    protected readonly List<IDragger> draggerInstances = new();
 
     public PanelManager(UIBase owner)
     {
@@ -150,7 +150,7 @@ public class PanelManager
     }
 
     // invoked from UIPanel.Destroy
-    protected internal virtual void RemovePanel(PanelBase panel)
+    protected internal virtual void RemovePanel(IPanelBase panel)
     {
         allDraggers.Remove(panel.Dragger);
         draggerInstances.Remove(panel.Dragger);
@@ -199,8 +199,8 @@ public class PanelManager
                 if (!transformIDToUIPanel.TryGetValue(transform.GetInstanceID(), out IPanelBase? panel)) continue;
 
                 // check if our mouse is clicking inside the panel
-                Vector3 pos = panel.Rect.InverseTransformPoint(mousePos);
-                if (!panel.Enabled || !panel.Rect.rect.Contains(pos)) continue;
+                Vector3 pos = panel.PanelRect.InverseTransformPoint(mousePos);
+                if (!panel.Enabled || !panel.PanelRect.rect.Contains(pos)) continue;
 
                 // Panel was clicked in.
                 focusHandledThisFrame = true;
@@ -230,7 +230,7 @@ public class PanelManager
     /// <summary>Invoked when panels are reordered.</summary>
     protected virtual void SortDraggerHeirarchy()
     {
-        draggerInstances.Sort((a, b) => b.Rect.GetSiblingIndex().CompareTo(a.Rect.GetSiblingIndex()));
+        draggerInstances.Sort((a, b) => b.PanelRect.GetSiblingIndex().CompareTo(a.PanelRect.GetSiblingIndex()));
     }
 
     /// <summary>
@@ -254,9 +254,9 @@ public class PanelManager
         previousMouseButtonState = state;
 
 
-        foreach (PanelDragger instance in draggerInstances)
+        foreach (IDragger instance in draggerInstances)
         {
-            if (!instance.Rect.gameObject.activeSelf)
+            if (!instance.PanelRect.gameObject.activeSelf)
                 continue;
 
             instance.Update(state, mousePos);
@@ -267,7 +267,7 @@ public class PanelManager
 
         if (wasAnyDragging && state.HasFlag(MouseState.ButtonState.Up))
         {
-            foreach (PanelDragger instance in draggerInstances)
+            foreach (IDragger instance in draggerInstances)
                 instance.WasDragging = false;
             wasAnyDragging = false;
         }

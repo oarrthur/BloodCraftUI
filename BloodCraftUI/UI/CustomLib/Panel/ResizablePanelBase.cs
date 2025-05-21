@@ -20,7 +20,7 @@ public abstract class ResizeablePanelBase : PanelBase
         TitleBar.SetActive(false);
         if (ResizeWholePanel)
         {
-            Dragger.DraggableArea = Rect;
+            Dragger.DraggableArea = PanelRect;
             // Update resizer elements
             Dragger.OnEndResize();
         }
@@ -66,8 +66,8 @@ public abstract class ResizeablePanelBase : PanelBase
         {
             return string.Join("|", new string[]
             {
-                Rect.RectAnchorsToString(),
-                Rect.RectPositionToString(),
+                PanelRect.RectAnchorsToString(),
+                PanelRect.RectPositionToString(),
                 IsPinned.ToString()
             });
         }
@@ -98,8 +98,8 @@ public abstract class ResizeablePanelBase : PanelBase
 
         try
         {
-            Rect.SetAnchorsFromString(split[0]);
-            Rect.SetPositionFromString(split[1]);
+            PanelRect.SetAnchorsFromString(split[0]);
+            PanelRect.SetPositionFromString(split[1]);
             if (split.Length > 2 && bool.TryParse(split[2], out var pinned))
                 IsPinned = pinned;
             EnsureValidSize();

@@ -65,7 +65,7 @@ namespace BloodCraftUI.UI.ModContent
 
         public void RecalculateHeight()
         {
-            if (_uiAnchor == null || Rect == null) return;
+            if (_uiAnchor == null || PanelRect == null) return;
 
             // Get VerticalLayoutGroup to account for its spacing and padding
             var vlg = _uiAnchor.GetComponent<VerticalLayoutGroup>();
@@ -101,7 +101,7 @@ namespace BloodCraftUI.UI.ModContent
             contentHeight += vlg.padding.top + vlg.padding.bottom + 30f;
 
             // Set panel height
-            Rect.sizeDelta = new Vector2(Rect.sizeDelta.x, contentHeight);
+            PanelRect.sizeDelta = new Vector2(PanelRect.sizeDelta.x, contentHeight);
         }
 
         public void UpdateData(FamStats data)
@@ -234,33 +234,9 @@ namespace BloodCraftUI.UI.ModContent
 
         protected override void ConstructPanelContent()
         {
-            /*var source = UnityHelper.FindInHierarchy("BloodOrbParent|BloodOrb");
-            var blood = Object.Instantiate(source, Plugin.UIManager.UIRoot.transform);
-            blood.GetComponent<RectTransform>().localScale = new Vector3(2f, 2f, 2f);
-            var c1 = blood.transform.FindChild("BlackBackground");
-            var c2 = c1.transform.FindChild("Blood");
-            var trash = blood.GetComponent<BloodOrbComponent>();
-            if(trash != null)
-            {
-                Object.Destroy(trash);
-            }
-
-            var t = c2.gameObject.GetComponent<ValidUiRaycastTarget>();
-            Object.Destroy(t);
-            var t2 = c2.gameObject.GetComponent<EventTrigger>();
-            Object.Destroy(t2);
-
-            var img = c2.gameObject.GetComponent<Image>();
-
-            var material = new Material(img.material.shader);
-            material.CopyPropertiesFromMaterial(img.material);
-            img.material = material;
-            img.SetMaterialDirty();
-            img.material.SetFloat("_LiquidLevel", 1f);*/
-
             // Hide the title bar and set up the panel
             TitleBar.SetActive(false);
-            Dragger.DraggableArea = Rect;
+            Dragger.DraggableArea = PanelRect;
             Dragger.OnEndResize();
 
             // Modify ContentRoot to ensure it has no extra padding

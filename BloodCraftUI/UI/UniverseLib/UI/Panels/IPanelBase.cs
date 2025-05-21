@@ -8,9 +8,11 @@ public interface IPanelBase
     PanelType PanelType { get; }
     string PanelId { get; }
     bool Enabled { get; set; }
-    RectTransform Rect { get; }
+    RectTransform PanelRect { get; }
     GameObject UIRoot { get; }
-    PanelDragger Dragger { get; }
+    UIBase Owner { get; }
+    IDragger Dragger { get; }
+    bool IsPinned { get; }
 
     void Destroy();
     void EnsureValidSize();

@@ -33,11 +33,11 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
 
     public virtual bool CanDrag { get; protected set; } = true;
     public virtual PanelDragger.ResizeTypes CanResize => PanelDragger.ResizeTypes.All;
-    public PanelDragger Dragger { get; internal set; }
+    public IDragger Dragger { get; internal set; }
 
     public override GameObject UIRoot => uiRoot;
     protected GameObject uiRoot;
-    public RectTransform Rect { get; private set; }
+    public RectTransform PanelRect { get; private set; }
     public GameObject ContentRoot { get; protected set; }
 
     public GameObject TitleBar { get; private set; }
@@ -84,7 +84,7 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
             }
         }
 
-        Rect.sizeDelta = new Vector2(contentWidth, Rect.sizeDelta.y);
+        PanelRect.sizeDelta = new Vector2(contentWidth, PanelRect.sizeDelta.y);
     }
 
     public void SetTitle(string label)
@@ -147,13 +147,13 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
 
     public virtual void SetDefaultSizeAndPosition()
     {
-        Rect.localPosition = DefaultPosition;
-        Rect.pivot = DefaultPivot;
+        PanelRect.localPosition = DefaultPosition;
+        PanelRect.pivot = DefaultPivot;
 
-        Rect.anchorMin = DefaultAnchorMin;
-        Rect.anchorMax = DefaultAnchorMax;
+        PanelRect.anchorMin = DefaultAnchorMin;
+        PanelRect.anchorMax = DefaultAnchorMax;
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(Rect);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(PanelRect);
 
         EnsureValidPosition();
         EnsureValidSize();
@@ -163,13 +163,13 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
 
     public virtual void EnsureValidSize()
     {
-        if (Rect.rect.width < MinWidth)
-            Rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MinWidth);
-        if (MaxWidth > 0 && Rect.rect.width > MaxWidth)
-            Rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MaxWidth);
+        if (PanelRect.rect.width < MinWidth)
+            PanelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MinWidth);
+        if (MaxWidth > 0 && PanelRect.rect.width > MaxWidth)
+            PanelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MaxWidth);
 
-        if (Rect.rect.height < MinHeight)
-            Rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, MinHeight);
+        if (PanelRect.rect.height < MinHeight)
+            PanelRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, MinHeight);
 
         Dragger.OnEndResize();
     }
@@ -178,14 +178,14 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
     {
         var scale = UniversalUI.uiBases.First().Panels.PanelHolder.GetComponent<RectTransform>().localScale.x;
         // Prevent panel going outside screen bounds
-        Vector2 pos = Rect.anchoredPosition;
+        Vector2 pos = PanelRect.anchoredPosition;
         Vector2 dimensions = Owner.Scaler.referenceResolution / scale;
         float halfW = dimensions.x * 0.5f;
         float halfH = dimensions.y * 0.5f;
 
         // Account for localScale by multiplying width and height
-        float scaledWidth = Rect.rect.width;
-        float scaledHeight = Rect.rect.height;
+        float scaledWidth = PanelRect.rect.width;
+        float scaledHeight = PanelRect.rect.height;
 
         // Calculate min/max positions accounting for scaled dimensions
         float minPosX = -halfW + scaledWidth * 0.5f;
@@ -196,21 +196,21 @@ public abstract class PanelBase : UIBehaviourModel, IPanelBase
         // Apply clamping to keep the panel within screen bounds
         pos.x = Math.Clamp(pos.x, minPosX, maxPosX);
         pos.y = Math.Clamp(pos.y, minPosY, maxPosY);
-        Rect.anchoredPosition = pos;
+        PanelRect.anchoredPosition = pos;
     }
 
     // UI Construction
 
     protected abstract void ConstructPanelContent();
 
-    protected virtual PanelDragger CreatePanelDragger() => new(this);
+    protected virtual IDragger CreatePanelDragger() => new PanelDragger(this, TitleBar.GetComponent<RectTransform>());
 
     public virtual void ConstructUI()
     {
         // create core canvas 
         uiRoot = UIFactory.CreatePanel(PanelId, Owner.Panels.PanelHolder, out GameObject contentRoot, opacity: Opacity);
         ContentRoot = contentRoot;
-        Rect = uiRoot.GetComponent<RectTransform>();
+        PanelRect = uiRoot.GetComponent<RectTransform>();
 
         UIFactory.SetLayoutElement(ContentRoot, 0, 0, flexibleWidth: 9999, flexibleHeight: 9999);
 

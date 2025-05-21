@@ -13,11 +13,12 @@ namespace BloodCraftUI.UI.ModContent
         private GameObject _uiRoot;
 
         public UIBase Owner { get; }
-        public RectTransform Rect { get; private set; }
+        public RectTransform PanelRect { get; private set; }
         public PanelType PanelType => PanelType.TestPanel;
         public string PanelId => "TestPanel";
         public override GameObject UIRoot => _uiRoot;
-        public PanelDragger Dragger { get; internal set; }
+        public IDragger Dragger { get; internal set; }
+        public bool IsPinned { get; }
         public float Opacity => Settings.UITransparency;
 
         public TestPanel(UIBase uiBase)

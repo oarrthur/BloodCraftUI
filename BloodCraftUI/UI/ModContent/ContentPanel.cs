@@ -46,7 +46,7 @@ namespace BloodCraftUI.UI.ModContent
                 ? UIFactory.CreateHorizontalGroup(ContentRoot, "UIAnchor", true, true, true, true)
                 : UIFactory.CreateVerticalGroup(ContentRoot, "UIAnchor", false, true, true, true, padding: new Vector4(5,5,5,5));
 
-            Dragger.DraggableArea = Rect;
+            Dragger.DraggableArea = PanelRect;
             Dragger.OnEndResize();
 
             _objectsList = new List<GameObject>();
@@ -88,7 +88,10 @@ namespace BloodCraftUI.UI.ModContent
                 var famStatsButton = UIFactory.CreateButton(_uiAnchor, "FamStatsButton", "Fam Stats");
                 UIFactory.SetLayoutElement(famStatsButton.GameObject, ignoreLayout: false, minWidth: 80, minHeight: 25);
                 _objectsList.Add(famStatsButton.GameObject);
-                famStatsButton.OnClick = () => { Plugin.UIManager.AddPanel(PanelType.FamStats); };
+                famStatsButton.OnClick = () =>
+                {
+                    Plugin.UIManager.AddPanel(PanelType.OrbFamStats);
+                };
             }
 
             if (Settings.IsBindButtonEnabled)

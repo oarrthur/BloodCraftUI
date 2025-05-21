@@ -6,5 +6,6 @@ public enum PanelType
     BoxList,
     BoxContent,
     FamStats,
+    OrbFamStats,
     TestPanel
 }

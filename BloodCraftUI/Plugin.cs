@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
@@ -11,7 +10,6 @@ using BloodCraftUI.UI.CustomLib.Util;
 using BloodCraftUI.UI.ModernLib;
 using BloodCraftUI.Utils;
 using HarmonyLib;
-using ProjectM.Scripting;
 using Unity.Entities;
 using UnityEngine;
 
