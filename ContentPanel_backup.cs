@@ -1,0 +1,1 @@
+// Backup do ContentPanel.cs antes da correção completa

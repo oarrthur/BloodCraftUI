@@ -127,10 +127,17 @@ namespace BloodCraftUI.UI.ModContent
 
         protected override void ConstructPanelContent()
         {
-            var horGroup = UIFactory.CreateHorizontalGroup(ContentRoot, "CheckGroup", true, false, true, false, 3,
-                default, new Color(1, 1, 1, 0), TextAnchor.MiddleLeft);
-            _deleteToggle = UIFactory.CreateToggle(horGroup, "ToggleDelete", text: "Enable delete buttons");
-            UIFactory.SetLayoutElement(_deleteToggle.GameObject, minWidth: 250, minHeight: 25, flexibleWidth: 9999);
+            // Seção de controles superiores
+            var topControlsGroup = UIFactory.CreateVerticalGroup(ContentRoot, "TopControls", false, false, true, true, 3,
+                new Vector4(5, 5, 5, 5), new Color(1, 1, 1, 0));
+            UIFactory.SetLayoutElement(topControlsGroup, minHeight: 60, flexibleWidth: 9999);
+
+            // Linha 1: Toggle de delete e botões de ação rápida
+            var controlsRow1 = UIFactory.CreateHorizontalGroup(topControlsGroup, "ControlsRow1", false, false, true, true, 5);
+            UIFactory.SetLayoutElement(controlsRow1, minHeight: 25, flexibleWidth: 9999);
+
+            _deleteToggle = UIFactory.CreateToggle(controlsRow1, "ToggleDelete", text: "Excluir");
+            UIFactory.SetLayoutElement(_deleteToggle.GameObject, minWidth: 80, minHeight: 25, flexibleWidth: 3);
             _deleteToggle.Toggle.isOn = false;
             _deleteToggle.OnValueChanged += (value) =>
             {
@@ -140,6 +147,47 @@ namespace BloodCraftUI.UI.ModContent
                 }
             };
 
+            // Botão de procurar familiar
+            var searchBtn = UIFactory.CreateButton(controlsRow1, "SearchBtn", "Buscar");
+            UIFactory.SetLayoutElement(searchBtn.GameObject, minHeight: 25, minWidth: 80, flexibleWidth: 1);
+            searchBtn.OnClick = () => {
+                // Abre o painel de gerenciamento focado na busca
+                Plugin.UIManager.AddPanel(PanelType.BoxManagement);
+            };
+
+            // Botão de ações rápidas
+            var actionsBtn = UIFactory.CreateButton(controlsRow1, "ActionsBtn", "Habilidade");
+            UIFactory.SetLayoutElement(actionsBtn.GameObject, minHeight: 25, minWidth: 80, flexibleWidth: 1);
+            actionsBtn.OnClick = () => {
+                MessageService.EnqueueMessage(MessageService.BCCOM_CHANGEABILITY);
+                actionsBtn.DisableWithTimer(2000);
+            };
+
+            // Linha 2: Funcionalidades avançadas
+            var controlsRow2 = UIFactory.CreateHorizontalGroup(topControlsGroup, "ControlsRow2", false, false, true, true, 5);
+            UIFactory.SetLayoutElement(controlsRow2, minHeight: 25, flexibleWidth: 9999);
+
+            var shinyBtn = UIFactory.CreateButton(controlsRow2, "ShinyBtn", "Shiny");
+            UIFactory.SetLayoutElement(shinyBtn.GameObject, minHeight: 25, flexibleWidth: 1);
+            shinyBtn.OnClick = () => {
+                // Exemplo: aplicar shiny de sangue por padrão
+                MessageService.EnqueueMessage(string.Format(MessageService.BCCOM_CHOOSESHINY, "sangue"));
+                shinyBtn.DisableWithTimer(3000);
+            };
+
+            var tradeBtn = UIFactory.CreateButton(controlsRow2, "TradeBtn", "Negociar");
+            UIFactory.SetLayoutElement(tradeBtn.GameObject, minHeight: 25, flexibleWidth: 1);
+            tradeBtn.OnClick = () => {
+                Plugin.UIManager.AddPanel(PanelType.TradePanel);
+            };
+
+            var moveBtn = UIFactory.CreateButton(controlsRow2, "MoveBtn", "Transferir");
+            UIFactory.SetLayoutElement(moveBtn.GameObject, minHeight: 25, flexibleWidth: 1);
+            moveBtn.OnClick = () => {
+                Plugin.UIManager.AddPanel(PanelType.BoxManagement);
+            };
+
+            // Lista de familiares (scroll pool)
             _scrollDataHandler = new BoxContentListHandler<FamDataListItem, BoxContentCell>(_scrollPool, GetEntries, SetCell, ShouldDisplay, OnCellClicked, OnDeleteClicked);
             _scrollPool = UIFactory.CreateScrollPool<BoxContentCell>(ContentRoot, "ContentList", out GameObject scrollObj,
                 out _, new Color(0.03f, 0.03f, 0.03f, Theme.Opacity));

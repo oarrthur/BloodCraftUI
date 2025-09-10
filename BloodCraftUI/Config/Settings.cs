@@ -48,6 +48,11 @@ namespace BloodCraftUI.Config
         public static bool AutoEnableFamiliarEquipment => (ConfigEntries[nameof(AutoEnableFamiliarEquipment)] as ConfigEntry<bool>)?.Value ?? true;
         public static bool IsPrestigeButtonEnabled => (ConfigEntries[nameof(IsPrestigeButtonEnabled)] as ConfigEntry<bool>)?.Value ?? true;
         public static bool IsToggleButtonEnabled => (ConfigEntries[nameof(IsToggleButtonEnabled)] as ConfigEntry<bool>)?.Value ?? true;
+        
+        // Novas configurações para painéis avançados
+        public static bool IsBoxManagementPanelEnabled => (ConfigEntries[nameof(IsBoxManagementPanelEnabled)] as ConfigEntry<bool>)?.Value ?? true;
+        public static bool IsTradePanelEnabled => (ConfigEntries[nameof(IsTradePanelEnabled)] as ConfigEntry<bool>)?.Value ?? true;
+        public static bool EnableQuickActions => (ConfigEntries[nameof(EnableQuickActions)] as ConfigEntry<bool>)?.Value ?? true;
 
 
         public Settings InitConfig()
@@ -73,6 +78,11 @@ namespace BloodCraftUI.Config
             InitConfigEntry(UI_SETTINGS_GROUP, nameof(IsCombatButtonEnabled), true, "Is combat button enabled");
             InitConfigEntry(UI_SETTINGS_GROUP, nameof(IsPrestigeButtonEnabled), true, "Is prestige button enabled");
             InitConfigEntry(UI_SETTINGS_GROUP, nameof(IsToggleButtonEnabled), true, "Is toggle button enabled");
+            
+            // Configurações para novos painéis
+            InitConfigEntry(UI_SETTINGS_GROUP, nameof(IsBoxManagementPanelEnabled), true, "Enable box management panel with advanced features");
+            InitConfigEntry(UI_SETTINGS_GROUP, nameof(IsTradePanelEnabled), true, "Enable familiar trading panel");
+            InitConfigEntry(UI_SETTINGS_GROUP, nameof(EnableQuickActions), true, "Enable quick action buttons in panels");
             return this;
         }
 

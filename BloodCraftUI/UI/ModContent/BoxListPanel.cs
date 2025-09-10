@@ -30,16 +30,22 @@ namespace BloodCraftUI.UI.ModContent
 
         public BoxListPanel(UIBase owner) : base(owner)
         {
-            SetTitle("Box List");
+            SetTitle("Lista de Caixas");
         }
 
         public void AddListEntry(string name)
         {
-            if (_dataList.Any(a => a.Name.Equals(name)))
+            if (string.IsNullOrEmpty(name) || _dataList.Any(a => a.Name.Equals(name)))
                 return;
+            
             _dataList.Add(new FamBoxData { Name = name });
-            _scrollDataHandler.RefreshData();
-            _scrollPool.Refresh(true);
+            
+            // Garante que o refresh seja feito na thread principal
+            if (_scrollDataHandler != null && _scrollPool != null)
+            {
+                _scrollDataHandler.RefreshData();
+                _scrollPool.Refresh(true, true);
+            }
         }
 
         protected override void LateConstructUI()
@@ -66,8 +72,11 @@ namespace BloodCraftUI.UI.ModContent
         {
             //Object.Destroy(UIRoot);
             _dataList.Clear();
-            _scrollDataHandler.RefreshData();
-            _scrollPool.Refresh(true);
+            if (_scrollDataHandler != null && _scrollPool != null)
+            {
+                _scrollDataHandler.RefreshData();
+                _scrollPool.Refresh(true, true);
+            }
         }
 
         private void RunUpdateCommand()
@@ -109,21 +118,51 @@ namespace BloodCraftUI.UI.ModContent
 
         private void OnCellClicked(int dataIndex)
         {
-            var famBox = _dataList[dataIndex];
-            Plugin.UIManager.AddPanel(PanelType.BoxContent, famBox.Name);
+            if (_dataList == null || dataIndex < 0 || dataIndex >= _dataList.Count)
+                return;
+            
+            try
+            {
+                var famBox = _dataList[dataIndex];
+                if (famBox != null && !string.IsNullOrEmpty(famBox.Name))
+                {
+                    Plugin.UIManager.AddPanel(PanelType.BoxContent, famBox.Name);
+                }
+            }
+            catch
+            {
+                // Ignora erros de clique em índices inválidos
+            }
         }
 
         private bool ShouldDisplay(FamBoxData data, string filter) => true;
-        private List<FamBoxData> GetEntries() => _dataList;
+        private List<FamBoxData> GetEntries() => _dataList ?? new List<FamBoxData>();
 
         private void SetCell(ButtonCell cell, int index)
         {
-            if (index < 0 || index >= _dataList.Count)
+            if (cell == null || _dataList == null || index < 0 || index >= _dataList.Count)
             {
-                cell.Disable();
+                if (cell != null)
+                    cell.Disable();
                 return;
             }
-            cell.Button.ButtonText.text = _dataList[index].Name;
+            
+            try
+            {
+                var data = _dataList[index];
+                if (data != null && !string.IsNullOrEmpty(data.Name))
+                {
+                    cell.Button.ButtonText.text = data.Name;
+                }
+                else
+                {
+                    cell.Disable();
+                }
+            }
+            catch
+            {
+                cell.Disable();
+            }
         }
 
         #endregion

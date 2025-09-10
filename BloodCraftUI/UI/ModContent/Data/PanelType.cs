@@ -6,5 +6,8 @@ public enum PanelType
     BoxList,
     BoxContent,
     FamStats,
+    BoxManagement,
+    TradePanel,
+    AdvancedOptions,
     TestPanel
 }

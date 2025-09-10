@@ -112,6 +112,48 @@ public class BCUIManager : UIManagerBase
                 }
             }
                 break;
+            case PanelType.BoxManagement:
+            {
+                var panel = GetPanel<BoxManagementPanel>();
+                if (panel == null)
+                {
+                    var item = new BoxManagementPanel(UiBase);
+                    UIPanels.Add(item);
+                }
+                else
+                {
+                    panel.SetActive(!panel.Enabled);
+                }
+            }
+                break;
+            case PanelType.TradePanel:
+            {
+                var panel = GetPanel<TradeFamiliarPanel>();
+                if (panel == null)
+                {
+                    var item = new TradeFamiliarPanel(UiBase);
+                    UIPanels.Add(item);
+                }
+                else
+                {
+                    panel.SetActive(!panel.Enabled);
+                }
+            }
+                break;
+            case PanelType.AdvancedOptions:
+            {
+                var panel = GetPanel<AdvancedOptionsPanel>();
+                if (panel == null)
+                {
+                    var item = new AdvancedOptionsPanel(UiBase);
+                    UIPanels.Add(item);
+                }
+                else
+                {
+                    panel.SetActive(!panel.Enabled);
+                }
+            }
+                break;
             case PanelType.TestPanel:
             {
                 var panel = GetPanel<TestPanel>();

@@ -114,7 +114,7 @@ namespace BloodCraftUI.UI.ModContent
             _data = data;
 
             // Ensure we have a name to display
-            string nameToShow = !string.IsNullOrEmpty(data.Name) ? data.Name : "Unknown Familiar";
+            string nameToShow = !string.IsNullOrEmpty(data.Name) ? data.Name : "Familiar Desconhecido";
             if (_nameLabel != null)
                 _nameLabel.TextMesh.text = nameToShow;
 
@@ -327,7 +327,7 @@ namespace BloodCraftUI.UI.ModContent
             UIFactory.SetLayoutElement(_headerContainer, minHeight: 60, preferredHeight: 50, flexibleHeight: 0, flexibleWidth: 9999);
 
             // Familiar name with larger font
-            _nameLabel = UIFactory.CreateLabel(_headerContainer, "FamNameText", BloodCraftStateService.FamStats.Name ?? "Unknown",
+            _nameLabel = UIFactory.CreateLabel(_headerContainer, "FamNameText", BloodCraftStateService.FamStats.Name ?? "Desconhecido",
                 TextAlignmentOptions.Center, Theme.DefaultText, 18, outlineWidth: 0.05f);
             UIFactory.SetLayoutElement(_nameLabel.GameObject, minHeight: 25, preferredHeight: 25, flexibleHeight: 0, flexibleWidth: 9999);
             _nameLabel.TextMesh.fontStyle = FontStyles.Bold;
@@ -337,13 +337,13 @@ namespace BloodCraftUI.UI.ModContent
             UIFactory.SetLayoutElement(horGroup, minHeight: 25, preferredHeight: 25, flexibleHeight: 0, flexibleWidth: 9999);
 
             // Familiar school with larger font
-            _schoolLabel = UIFactory.CreateLabel(horGroup, "FamSchoolText", "Unknown",
+            _schoolLabel = UIFactory.CreateLabel(horGroup, "FamSchoolText", "Desconhecido",
                 TextAlignmentOptions.Center, Theme.DefaultText, 16, outlineWidth: 0f);
             UIFactory.SetLayoutElement(_schoolLabel.GameObject, minWidth: 60, flexibleWidth: 0, minHeight: 28, flexibleHeight: 0);
             _schoolLabel.TextMesh.fontStyle = FontStyles.Bold;
 
             // Level info - reduced height
-            _levelLabel = UIFactory.CreateLabel(horGroup, "FamLevelText", "Level: Unknown   Prestige: Unknown",
+            _levelLabel = UIFactory.CreateLabel(horGroup, "FamLevelText", "Nível: Desconhecido   Prestígio: Desconhecido",
                 TextAlignmentOptions.Center, Theme.DefaultText, 16, outlineWidth: 0f);
             UIFactory.SetLayoutElement(_levelLabel.GameObject, minWidth: 90, flexibleWidth: 0, minHeight: 28, flexibleHeight: 0);
 
